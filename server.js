@@ -20,6 +20,15 @@ inquirer
     ])
     .then((answers) => {
         console.log(answers)
+        switch (answers.path) {
+            case "Add Department":
+                addDepartment();
+                break;
+            case "Add Role":
+                addRole();
+                break;
+
+        }
     })
     .catch((error) =>{
         if (error.isTtyError) {
@@ -28,3 +37,10 @@ inquirer
             console.log('successfully selected!')
         }
     })
+
+    function addDepartment () {
+
+    }
+    function addRole () {
+
+    }
