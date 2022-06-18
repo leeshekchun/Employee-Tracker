@@ -61,7 +61,9 @@ function showDepartment() {
   const sql = "SELECT * FROM department";
 
   db.query(sql, (err, data) => {
+    if (err) throw (err);
     console.table(data);
+
     init();
   });
 }
@@ -75,7 +77,9 @@ function showRole() {
     ON role.department_id = department.id`;
 
   db.query(sql, (err, data) => {
+    if (err) throw (err);
     console.table(data);
+
     init();
   });
 }
@@ -90,7 +94,9 @@ function showEmployee() {
     employee.manage_id AS employee.id`;
 
   db.query(sql, (err, data) => {
+    if (err) throw (err);
     console.table(data);
+
     init();
   });
 }
