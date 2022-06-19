@@ -61,7 +61,7 @@ function showDepartment() {
   const sql = "SELECT * FROM department";
 
   db.query(sql, (err, data) => {
-    if (err) throw (err);
+    if (err) throw err;
     console.table(data);
 
     init();
@@ -71,13 +71,14 @@ function showDepartment() {
 function showRole() {
   const sql = `SELECT role.id, role.title, role.salary, 
     department.id 
-    AS department_id 
+    AS department_id,
+    name AS department_name 
     FROM role 
     LEFT JOIN department 
     ON role.department_id = department.id`;
 
   db.query(sql, (err, data) => {
-    if (err) throw (err);
+    if (err) throw err;
     console.table(data);
 
     init();
@@ -86,15 +87,17 @@ function showRole() {
 
 function showEmployee() {
   const sql = `SELECT employee.id, employee.first_name, employee.last_name, 
-    role.id 
-    AS role_id
-    FROM employee
-    LEFT JOIN role 
-    ON role_id = role.id, 
-    employee.manage_id AS employee.id`;
+  role.id 
+  AS role_id,
+  title, salary, m.last_name AS manager_lastname, m.first_name AS manager_firstname, name AS department_name
+  FROM employee
+  LEFT JOIN role ON role_id = role.id 
+  LEFT JOIN employee m ON m.id = employee.manager_id
+  LEFT JOIN department ON role.department_id = department.id
+  ;`;
 
   db.query(sql, (err, data) => {
-    if (err) throw (err);
+    if (err) throw err;
     console.table(data);
 
     init();
@@ -106,11 +109,24 @@ function addDepartment() {
     .prompt([
       {
         type: "input",
-        name: "department",
+        name: "addDepartment",
         message: "Enter new department",
       },
     ])
-    .then((answers) => {})
+    .then((answers) => {
+      db.query(
+        "INSERT INTO department (name) VALUES (?)",
+        answers.addDepartment,
+        function (err, results) {
+          if (err) {
+            console.err("There is an error adding new department");
+          } else {
+            console.log(results);
+          }
+          init();
+        }
+      );
+    })
     .catch((error) => {
       if (error.isTtyError) {
         console.error("");
@@ -134,10 +150,25 @@ function addRole() {
         message: "Enter salary",
       },
       {
-        type: "",
+        type: "input",
+        name: "department_id",
+        message: "Enter department id for the new role",
       },
     ])
-    .then((answers) => {})
+    .then((answers) => {
+      db.query(
+        "INSERT INTO role (title, salary, department_id) VALUES (?,?,?)",
+        [answers.role, answers.salary, answers.department_id],
+        function (err, results) {
+          if (err) {
+            console.err("There is an error adding new role");
+          } else {
+            console.log(results);
+          }
+          init();
+        }
+      );
+    })
     .catch((error) => {
       if (error.isTtyError) {
         console.error("");
@@ -147,7 +178,6 @@ function addRole() {
     });
 }
 function addEmployee() {
-  // query tables role
   inquirer
     .prompt([
       {
@@ -161,10 +191,30 @@ function addEmployee() {
         message: "Enter employee's last name",
       },
       {
-        type: "",
+        type: "input",
+        name: "roleID",
+        message: "Enter employee's role id",
+      },
+      {
+        type: "input",
+        name: "managerID",
+        message: "Enter employee manager's id",
       },
     ])
-    .then((answers) => {})
+    .then((answers) => {
+      db.query(
+        "INSERT INTO employee (first_name, last_name, role_id VALUES (?,?,?)",
+        [answers.first_name, answers.last_name, answers.role_id],
+        function (err, results) {
+          if (err) {
+            console.err("There is an error adding new employee");
+          } else {
+            console.log(results);
+          }
+          init();
+        }
+      );
+    })
     .catch((error) => {
       if (error.isTtyError) {
         console.error("");
