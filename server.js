@@ -207,7 +207,7 @@ function addEmployee() {
         [answers.first_name, answers.last_name, answers.role_id],
         function (err, results) {
           if (err) {
-            console.err("There is an error adding new employee");
+            console.error("There is an error adding new employee");
           } else {
             console.log(results);
           }
@@ -225,8 +225,32 @@ function addEmployee() {
 }
 function updateEmployeeRole() {
   inquirer
-    .prompt([{}])
-    .then((answers) => {})
+    .prompt([
+    {
+        type: "input",
+        name: "updateEmployeeID",
+        message: "What is the employee's ID that you want to update?"
+    },
+    {
+        type: "input",
+        name: "newRole",
+        message: "What is his/her new role?"
+    }
+])
+    .then((answers) => {
+      db.query(
+        "UPDATE employee SET role_id VALUES (?) WHERE id = ",
+        [answers.role_id],
+        function (err, results) {
+          if (err) {
+            console.error("There is an error updating emoloyee role");
+          } else {
+            console.log(results);
+          }
+          init();
+        }
+      );
+    })
     .catch((error) => {
       if (error.isTtyError) {
         console.error("");
