@@ -19,8 +19,8 @@ function init() {
           "Show Role",
           "Show Employee",
           "Finish",
-        ],
-      },
+        ]
+      }
     ])
     .then((answers) => {
       console.log(answers);
