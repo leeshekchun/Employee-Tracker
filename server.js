@@ -238,9 +238,10 @@ function updateEmployeeRole() {
     }
 ])
     .then((answers) => {
+
       db.query(
-        "UPDATE employee SET role_id VALUES (?) WHERE id = ",
-        [answers.role_id],
+        "UPDATE employee SET role_id = ? WHERE id = ?",
+        [answers.newRole, answers.updateEmployeeID],
         function (err, results) {
           if (err) {
             console.error("There is an error updating emoloyee role");
