@@ -14,7 +14,7 @@ VALUES  ('Salesperson', 8000, 1),
         ('Lawyer', 190000, 4);
 
 INSERT INTO employee (first_name, last_name, role_id)
-VALUES  ('Chirs', 'Lee', 1),
+VALUES  ('Chris', 'Lee', 1),
         ('Jed', 'Lee', 2);
 
 UPDATE employee
